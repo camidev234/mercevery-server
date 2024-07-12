@@ -5,10 +5,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class CompanyPaymentType extends Model
+class SalesTransaction extends Model
 {
     use HasFactory;
 
+    public function commerce_order() :BelongsTo {
+        return $this->belongsTo(CommerceOrder::class);
+    }
 }
