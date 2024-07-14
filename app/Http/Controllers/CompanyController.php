@@ -2,64 +2,45 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CompanyRequest;
 use App\Models\Company;
+use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\ValidationException;
 
 class CompanyController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-        //
-    }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
+    // function require the data to create a company
+    public function store(array $data)
+    {   
+        // declare the validator with them rules.
+        $validator = Validator::make($data, [
+            'company_name' => 'required|string|max:255',
+            'principal_activity' => 'required|string|max:255',
+            'user_id' => 'required|integer|exists:users,id',
+        ]);
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
+        // if an validation error ocurred
+        if ($validator->fails()) {
+            // throw a ValidationException with $validator
+            throw new ValidationException($validator);
+        }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Company $company)
-    {
-        //
-    }
+        // else, create a new Company model
+        $newCompany = new Company();
+        // assign properties
+        // each property, will be the key of array
+        // structure [key => value]
+        $newCompany->company_name = $data['company_name'];
+        $newCompany->principal_activity = $data['principal_activity'];
+        $newCompany->user_id = $data['user_id'];
+        // save the company
+        $newCompany->save();
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Company $company)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Company $company)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Company $company)
-    {
-        //
+        // return the company created
+        return $newCompany;
     }
 }
