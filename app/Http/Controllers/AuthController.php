@@ -8,6 +8,7 @@ use App\Http\Requests\RegisterRequest;
 use App\Http\Resources\UserResource;
 use Illuminate\Http\Request;
 use App\Models\User;
+use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
 use Validator;
@@ -69,6 +70,7 @@ class AuthController extends Controller
                 }
             }
 
+            
             // save the querys that were executed on database.
             DB::commit();
 
@@ -80,10 +82,10 @@ class AuthController extends Controller
 
             ], 201);
             // get the exception, only if a server error has ocurred.
-        } catch (\Exception $e) {
-            // rollback the querys that were executed
+        }  catch (\Exception $e) {
+            // rollback the queries that were executed
             DB::rollBack();
-            return response()->json(['error' => $e->getMessage()], 500);
+            return response()->json(['error' => 'Server error', 'status_code' => 500], 500);
         }
     }
 
