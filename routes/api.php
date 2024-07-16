@@ -15,5 +15,6 @@ Route::group([
     });
     Route::prefix('products')->group(function () {
         Route::post('/save_product', [ProductController::class, 'createProduct'])->middleware('auth:api');
+        Route::get('/{product}', [ProductController::class, 'show'])->middleware('auth:api');
     });
 });
